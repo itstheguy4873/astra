@@ -3,7 +3,7 @@
 
 # About
 
-Astra is a custom bootstrapper for [Roblox](https://roblox.com) designed to provide handy features thart officially available.
+Astra is a custom bootstrapper for [Roblox](https://roblox.com) designed to provide handy features that aren't officially available.
 > [!CAUTION]
 > This repository is the **ONLY** official source for Astra! In the near future, there will be an official site.
 
@@ -24,6 +24,13 @@ If you want to build Astra, you can do so with `git` and `PyInstaller` with the 
 
 ```
 git clone https://github.com/itstheguy4873/astra-roblox
+cd astra-roblox
+```
+
+And then package it with:
+
+```
+pyinstaller --noconfirm --onedir --windowed --icon ".\logo.ico" --name "Astra" --add-data ".\config.py;." --add-data ".\util_toolbox.py;." --add-data ".\launcher.py;." --add-data ".\assets;assets/"  ".\astra.py" --distpath .
 ```
 
 # Note
