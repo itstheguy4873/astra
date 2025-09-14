@@ -18,6 +18,8 @@ if len(sys.argv) > 1:
         config()
     if uri == '--app'.lower():
         launch('app')
+    if uri.startswith('roblox'):
+        launch(uri)
 
 print(tk.__file__)
 
