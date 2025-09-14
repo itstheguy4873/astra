@@ -33,6 +33,12 @@ And then package it with:
 pyinstaller --noconfirm --onedir --windowed --icon ".\assets\icon\light\logo.ico" --name "Astra" --add-data ".\config.py;." --add-data ".\util_toolbox.py;." --add-data ".\launcher.py;." --add-data ".\assets;assets/"  ".\astra.py" --distpath .
 ```
 
+
+> [!NOTE]
+> There may be some bugs when trying to build Astra.
+> If so, you can open an [issue](https://github.com/itstheguy4873/astra-roblox/issues)
+> and I'll try to fix it as soon as possible.
+
 # Note
 
 Astra is in early development, and some features may not work as intended.
