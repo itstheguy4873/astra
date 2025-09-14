@@ -19,6 +19,8 @@ if len(sys.argv) > 1:
     if uri == '--app'.lower():
         launch('app')
 
+print(tk.__file__)
+
 pconfig = parse(configpath)
 theme = pconfig.get('Theme', 'Light')
 version = pconfig.get('Version', 'x.x.x')
@@ -93,13 +95,13 @@ def onleave(button, initialcolor):
 
 def launchroblox():
     main.destroy()
-    launch('roblox')
+    launch('app')
 
 def launchsettings():
     main.destroy()
     config()
 
-openroblox = tk.CTkButton(main, text='Open Roblox', command=lambda: launchroblox, width=150, height=40, font=btnfont, text_color=themes[theme]['ui_color'], bg_color=themes[theme]['bg_color'], fg_color = themes[theme]['bg_color'],border_color=themes[theme]['hover_color'], border_width=1.5, corner_radius=10, hover_color=themes[theme]['hover_color'])
+openroblox = tk.CTkButton(main, text='Open Roblox', command=launchroblox, width=150, height=40, font=btnfont, text_color=themes[theme]['ui_color'], bg_color=themes[theme]['bg_color'], fg_color = themes[theme]['bg_color'],border_color=themes[theme]['hover_color'], border_width=1.5, corner_radius=10, hover_color=themes[theme]['hover_color'])
 openroblox.place(x=25,y=15)
 
 configbutton = tk.CTkButton(main, text='Configure Astra', command=launchsettings, width=150, height=40, font=btnfont, text_color=themes[theme]['ui_color'], bg_color=themes[theme]['bg_color'], fg_color = themes[theme]['bg_color'],border_color=themes[theme]['hover_color'], border_width=1.5, corner_radius=10, hover_color=themes[theme]['hover_color'])
