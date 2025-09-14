@@ -30,7 +30,7 @@ cd astra-roblox
 And then package it with:
 
 ```
-pyinstaller --noconfirm --onedir --windowed --icon ".\logo.ico" --name "Astra" --add-data ".\config.py;." --add-data ".\util_toolbox.py;." --add-data ".\launcher.py;." --add-data ".\assets;assets/"  ".\astra.py" --distpath .
+pyinstaller --noconfirm --onedir --windowed --icon ".\assets\icon\light\logo.ico" --name "Astra" --add-data ".\config.py;." --add-data ".\util_toolbox.py;." --add-data ".\launcher.py;." --add-data ".\assets;assets/"  ".\astra.py" --distpath .
 ```
 
 # Note
