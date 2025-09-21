@@ -3,7 +3,7 @@ import tkinter as ntk
 import winreg as reg
 import sys
 import threading
-from util_toolbox import *
+from util_toolbox import parse, themes, getasset, Font, cleanup, configpath, centerwindow, write, ConfigEntry
 from launcher import silent_update
 from customtkinter import set_appearance_mode
 from tkinter import messagebox as mb
@@ -25,8 +25,8 @@ def config():
 
         realtheme = theme
 
-        globalmedium = setfont(font,18)
-        globalsmall = setfont(font,12)
+        globalmedium = Font.new(font,18)
+        globalsmall = Font.new(font,12)
 
         if theme == 'System':
             import darkdetect
@@ -46,7 +46,8 @@ def config():
         falsebg = ntk.Frame(master=main, background=themes[theme]['bg_color'])
         falsebg.pack(expand=True, fill='both')
 
-        tabview = tk.CTkTabview(master=falsebg, fg_color=themes[theme]['bg_color'], bg_color=themes[theme]['bg_color'], corner_radius=14, segmented_button_selected_color='#538fd8', segmented_button_unselected_hover_color='#215da6', segmented_button_selected_hover_color='#215da6')
+        tabview = tk.CTkTabview(master=falsebg, fg_color=themes[theme]['bg_color'], bg_color=themes[theme]['bg_color'], corner_radius=14, segmented_button_selected_color='#538fd8', segmented_button_unselected_hover_color='#215da6', segmented_button_selected_hover_color='#215da6',)
+        tabview._segmented_button.configure(font=globalsmall)
         tabview.pack(expand=True, fill='both', padx=10, pady=10)
 
         general = tabview.add('General')
@@ -65,10 +66,10 @@ def config():
             else:
                 reg.DeleteValue(key, 'Roblox')
 
-        openstartupbox = ConfigEntry(generalscroll, text='Open Roblox on Startup', type='switch', command=lambda: startup(openstartupbox.get()))
+        openstartupbox = ConfigEntry(generalscroll, text='Open Roblox on Startup', type='switch', fg_color=themes[theme]['btn_color'], command=lambda: startup(openstartupbox.get()))
         openstartupbox.pack()
         
-        opengamestartupbox = ConfigEntry(generalscroll, text='Open Game on Startup', type='switch', command=lambda: startup(openstartupbox.get()))
+        opengamestartupbox = ConfigEntry(generalscroll, text='Open Game on Startup', type='switch', fg_color=themes[theme]['btn_color'], command=lambda: startup(openstartupbox.get()))
         opengamestartupbox.pack(pady=20)
         
         #appearance tab
@@ -76,7 +77,7 @@ def config():
         appearancescroll = tk.CTkScrollableFrame(appearance, width=400, fg_color=themes[theme]['bg_color'])
         appearancescroll.pack()
 
-        themebox = ConfigEntry(appearancescroll, text='Application Theme', type='combobox', options=['Light','Dark','System'], setting=realtheme, command=lambda _: write(configpath, {'Theme': themebox.get()}))
+        themebox = ConfigEntry(appearancescroll, text='Application Theme', type='combobox', options=['Light','Dark','System'], fg_color=themes[theme]['btn_color'], setting=realtheme, command=lambda _: write(configpath, {'Theme': themebox.get()}))
 
         themebox.pack()
 
@@ -97,7 +98,7 @@ def config():
         infotext3 = tk.CTkLabel(about, text='By itstheguy4873', font=globalmedium)
         infotext3.place(x=100, y=40)
 
-        infotext4 = tk.CTkLabel(about, text=f'Running at {__file__}', font=globalsmall)
+        infotext4 = tk.CTkLabel(about, text=f'Running at {__file__}', font=globalsmall, wraplength=280)
         infotext4.place(x=100, y=100)
 
         #notice
@@ -109,5 +110,5 @@ def config():
     except Exception as e:
         mb.showerror('Astra', f'Astra encountered an error: {e}')
 
-if __name__ == '__main__': #dont delete this
+if __name__ == '__main__': #debug thing
     config()

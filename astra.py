@@ -1,6 +1,6 @@
 import customtkinter as tk
 import tkinter as ntk
-from util_toolbox import parse, themes, getasset, setfont, cleanup, configpath, centerwindow
+from util_toolbox import parse, themes, getasset, Font, cleanup, configpath, centerwindow
 from customtkinter import set_appearance_mode
 from PIL import Image
 from config import config
@@ -8,6 +8,8 @@ from launcher import launch
 import sys
 import darkdetect
 import logging
+
+print(sys.executable)
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -28,8 +30,8 @@ theme = pconfig.get('Theme', 'Light')
 version = pconfig.get('Version', 'x.x.x')
 font = pconfig.get('Font', 'Inter')
 
-globalfont = setfont(font,24)
-btnfont = setfont(font,18)
+globalfont = Font.new(font,24)
+btnfont = Font.new(font,18)
 
 if theme == 'System':
     if darkdetect.isDark():
@@ -46,12 +48,12 @@ set_appearance_mode(theme)
 main.configure(bg_color=themes[theme]['bg_color'])
 main.iconbitmap(getasset('logo', 'icon', theme))
 
-falsebg = ntk.Frame(master=main, background=themes[theme]['bg_color']) #i hate windows 11
+falsebg = ntk.Frame(master=main, background=themes[theme]['bg_color'])
 falsebg.pack(expand=True, fill='both')
 
 logoimage = Image.open(getasset('logo', 'image', theme))
 logoimagetk = tk.CTkImage(logoimage, size=(100, 100) if theme == 'Dark' else (85, 85))
-logolabel = tk.CTkLabel(main, text='', image=logoimagetk, bg_color=themes[theme]['bg_color']) #resize the images manually? NOPE
+logolabel = tk.CTkLabel(main, text='', image=logoimagetk, bg_color=themes[theme]['bg_color'])
 logolabel.place(x=220, y=25)
 
 logotext = tk.CTkLabel(main, text='Astra',text_color=themes[theme]['ui_color'], font=globalfont, bg_color=themes[theme]['bg_color'],justify='left')

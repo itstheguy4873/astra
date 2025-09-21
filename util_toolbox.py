@@ -35,9 +35,9 @@ themes = {
     }
 }
 
-extractroots = {
+extractRoots = {
     "RobloxApp.zip": "",
-    "redist.zip": "",
+    #"redist.zip": "", this appears to have become vestigial
     "shaders.zip": "shaders/",
     "ssl.zip": "ssl/",
 
@@ -126,17 +126,6 @@ def getasset(name, type, assettheme='Light'):
     else:
         logging.error(f'Asset type {type} does not exist. Path: {assetpath}')
 
-def setfont(fontname, fontsize): #i dont know if this the best way to do it but it works
-    fontpath = getasset(fontname, 'font')
-    ctypes.windll.gdi32.AddFontResourceExW(ctypes.c_wchar_p(fontpath), 0x10, 0)
-    font = TTFont(fontpath)
-    name = ''
-    for record in font['name'].names:
-        if record.nameID == 1:
-            name = record.toUnicode()
-            break
-    return (name, fontsize)
-
 configpath = Path(base / 'assets' / 'config' / '.astra')
 
 def cleanup():
@@ -159,6 +148,19 @@ def centerwindow(win, width, height):
     y = (screen_height // 2) - (height // 2)
 
     win.geometry(f'{width}x{height}+{x}+{y}')
+
+class Font(tuple):
+    def new(fontname, fontsize):
+        fontpath = getasset(fontname, 'font')
+        ctypes.windll.gdi32.AddFontResourceExW(ctypes.c_wchar_p(fontpath), 0x10, 0)
+        font = TTFont(fontpath)
+        name = ''
+        for record in font['name'].names:
+            if record.nameID == 1:
+                name = record.toUnicode()
+                break
+
+        return (name, fontsize)
 
 class ConfigEntry(tk.CTkFrame):
     def __init__(self, parent, text='', fg_color='#2a2a2a', text_color='#ffffff', font=('Arial', 14), corner_radius=10, type='switch', command=None, setting='', options=['Dark 1', 'Light 2',], disabled=False, **kwargs):
