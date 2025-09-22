@@ -5,7 +5,7 @@
 
 Astra is a custom bootstrapper for [Roblox](https://roblox.com) designed to provide handy features that aren't officially available.
 > [!CAUTION]
-> This repository is the **ONLY** official source for Astra! In the near future, there will be an official site.
+> This repository and [the website](https://itstheguy4873.securecpro.com) are the **ONLY** official sources for Astra!
 
 # Installation
 
