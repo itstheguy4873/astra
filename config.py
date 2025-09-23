@@ -3,17 +3,18 @@ import tkinter as ntk
 import winreg as reg
 import sys
 import threading
+import urllib3
 from util_toolbox import parse, themes, getasset, Font, cleanup, configpath, centerwindow, write, ConfigEntry
-from launcher import silent_update
 from customtkinter import set_appearance_mode
-from tkinter import messagebox as mb
 from PIL import Image
 
 def config():
-    try:
+
+        http = urllib3.PoolManager()
+
         main = tk.CTk()
 
-        centerwindow(main, 400, 225)
+        centerwindow(main, 800, 450)
         main.title('Configure Astra')
         main.resizable(False, False)
 
@@ -39,42 +40,74 @@ def config():
         main.configure(bg_color=themes[theme]['bg_color'])
         main.iconbitmap(getasset('logo', 'icon', theme))
 
-        thread = threading.Thread(target=silent_update)
-
-        thread.start()
-
         falsebg = ntk.Frame(master=main, background=themes[theme]['bg_color'])
         falsebg.pack(expand=True, fill='both')
 
         tabview = tk.CTkTabview(master=falsebg, fg_color=themes[theme]['bg_color'], bg_color=themes[theme]['bg_color'], corner_radius=14, segmented_button_selected_color='#538fd8', segmented_button_unselected_hover_color='#215da6', segmented_button_selected_hover_color='#215da6',)
         tabview._segmented_button.configure(font=globalsmall)
+
         tabview.pack(expand=True, fill='both', padx=10, pady=10)
 
         general = tabview.add('General')
+        startup = tabview.add('Startup')
         appearance = tabview.add('Appearance')
         about = tabview.add('About')
 
         # general tab
 
-        generalscroll = tk.CTkScrollableFrame(general, width=400, fg_color=themes[theme]['bg_color'])
+        generalscroll = tk.CTkScrollableFrame(general, width=800, fg_color=themes[theme]['bg_color'])
         generalscroll.pack()
+        
+        #startup tab
 
-        def startup(value):
+        def startupf(value, enabled):
+            if enabled:
+                return
             key = reg.OpenKeyEx(reg.HKEY_CURRENT_USER, r'Software\\Microsoft\Windows\\CurrentVersion\\Run', 0, reg.KEY_ALL_ACCESS)
             if value == True:
                 reg.SetValueEx(key, 'Roblox', 0, reg.REG_EXPAND_SZ, f'"{sys.argv[0]}" --app')
             else:
-                reg.DeleteValue(key, 'Roblox')
+                try:
+                    reg.DeleteValue(key, 'Roblox')
+                except WindowsError:
+                    pass
 
-        openstartupbox = ConfigEntry(generalscroll, text='Open Roblox on Startup', type='switch', fg_color=themes[theme]['btn_color'], command=lambda: startup(openstartupbox.get()))
+        def startupg(value, enabled, otherenabled):
+            if otherenabled:
+                print("enabled")
+                return
+            
+            key = reg.OpenKeyEx(reg.HKEY_CURRENT_USER, r'Software\\Microsoft\Windows\\CurrentVersion\\Run', 0, reg.KEY_ALL_ACCESS)
+            response = http.request('GET',f'https://www.roblox.com/games/{value}')
+
+            if response.status !=200:
+                raise ValueError("Invalid Place ID! Make sure you enter the Place ID only, not the link.")
+
+            if enabled == True:
+                reg.SetValueEx(key, 'Roblox', 0, reg.REG_EXPAND_SZ, f'"{sys.argv[0]}" roblox://experiences/start?placeId={value}')
+            else:
+                try:
+                    reg.DeleteValue(key, 'Roblox')
+                except WindowsError:
+                    pass
+
+        startupscroll = tk.CTkScrollableFrame(startup, width=800, fg_color=themes[theme]['bg_color'])
+        startupscroll.pack()
+
+        openstartupbox = ConfigEntry(startupscroll, text='Open Roblox on Startup', type='switch', fg_color=themes[theme]['btn_color'], command=lambda: startupf(openstartupbox.get(), opengamestartupbox.get()))
         openstartupbox.pack()
         
-        opengamestartupbox = ConfigEntry(generalscroll, text='Open Game on Startup', type='switch', fg_color=themes[theme]['btn_color'], command=lambda: startup(openstartupbox.get()))
+        opengamestartupbox = ConfigEntry(startupscroll, text='Open Game on Startup', type='switch', fg_color=themes[theme]['btn_color'], command=lambda: startupg(opengamestartupentry.get(), opengamestartupbox.get(), openstartupbox.get()))
         opengamestartupbox.pack(pady=20)
-        
+
+        opengamestartupentry = ConfigEntry(startupscroll, text='Game to Open', type='entry', fg_color=themes[theme]['btn_color'], setting="", width=300)
+        opengamestartupentry.pack()
+
         #appearance tab
-        
-        appearancescroll = tk.CTkScrollableFrame(appearance, width=400, fg_color=themes[theme]['bg_color'])
+
+
+
+        appearancescroll = tk.CTkScrollableFrame(appearance, width=800 , fg_color=themes[theme]['bg_color'])
         appearancescroll.pack()
 
         themebox = ConfigEntry(appearancescroll, text='Application Theme', type='combobox', options=['Light','Dark','System'], fg_color=themes[theme]['btn_color'], setting=realtheme, command=lambda _: write(configpath, {'Theme': themebox.get()}))
@@ -101,14 +134,10 @@ def config():
         infotext4 = tk.CTkLabel(about, text=f'Running at {__file__}', font=globalsmall, wraplength=280)
         infotext4.place(x=100, y=100)
 
-        #notice
-        mb.showinfo('Notice', "As Astra is *barely working,* the settings menu is incomplete and probably won't work.")
-
         main.mainloop()
 
         cleanup()
-    except Exception as e:
-        mb.showerror('Astra', f'Astra encountered an error: {e}')
+
 
 if __name__ == '__main__': #debug thing
     config()

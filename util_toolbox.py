@@ -163,20 +163,25 @@ class Font(tuple):
         return (name, fontsize)
 
 class ConfigEntry(tk.CTkFrame):
-    def __init__(self, parent, text='', fg_color='#2a2a2a', text_color='#ffffff', font=('Arial', 14), corner_radius=10, type='switch', command=None, setting='', options=['Dark 1', 'Light 2',], disabled=False, **kwargs):
+    def __init__(self, parent, text='', fg_color='#2a2a2a', text_color='#ffffff', font=('Arial', 14), corner_radius=30, type='switch', command=None, setting='', options=['Dark 1', 'Light 2',], disabled=False, **kwargs):
         super().__init__(parent, fg_color=fg_color, corner_radius=corner_radius, **kwargs)
 
-        self.label = tk.CTkLabel(self, text=text, font=font, text_color=text_color, fg_color='transparent', anchor='w', width=300)
+        self.label = tk.CTkLabel(self, text=text, font=font, text_color=text_color, fg_color='transparent', anchor='w', width=700)
         
         if type.lower() == 'switch':
             self.switch = tk.CTkSwitch(self, text='', command=command, state='normal' if not disabled else 'disabled')
             self.label.pack(side='left', expand=True, fill='both', padx=(10, 5), pady=10)
-            self.switch.place(x=265, y=12)
+            self.switch.place(x=560, y=12)
         if type.lower() == 'combobox':
-            self.switch = tk.CTkComboBox(self, command=command, values=options, font=font, state='normal' if not disabled else 'disabled')
+            self.switch = tk.CTkComboBox(self, command=command, values=options, font=font, state='normal' if not disabled else 'disabled', border_width=0, corner_radius=30)
             self.label.pack(side='left', expand=True, fill='both', padx=(10, 5), pady=10)
-            self.switch.place(x=170, y=10)
+            self.switch.place(x=560, y=10)
             self.switch.set(setting)
+        if type.lower() == 'entry':
+            self.switch = tk.CTkEntry(self, font=font, state='normal' if not disabled else 'disabled', border_width=0, corner_radius=30)
+            self.label.pack(side='left', expand=True, fill='both', padx=(10, 5), pady=10)
+            self.switch.place(x=560, y=10)
+            self.switch.insert(0, setting)
     
     def get(self):
         return self.switch.get()
